@@ -22,7 +22,10 @@ class ConfigProviderTest extends TestCase
 
         $serviceManger = new ServiceManager($config['dependencies']);
 
-        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $serviceManger->get(ProblemDetailsResponseFactory::class));
-        $this->assertInstanceOf(ProblemDetailsMiddleware::class, $serviceManger->get(ProblemDetailsMiddleware::class));
+        $responseFactory = $serviceManger->get(ProblemDetailsResponseFactory::class);
+        $middleware = $serviceManger->get(ProblemDetailsMiddleware::class);
+
+        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $responseFactory);
+        $this->assertInstanceOf(ProblemDetailsMiddleware::class, $middleware);
     }
 }
