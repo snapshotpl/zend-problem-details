@@ -10,9 +10,8 @@ namespace ZendTest\ProblemDetails;
 use PHPUnit\Framework\TestCase;
 use Zend\ProblemDetails\ConfigProvider;
 use Zend\ProblemDetails\ProblemDetailsMiddleware;
-use Zend\ProblemDetails\ProblemDetailsMiddlewareFactory;
 use Zend\ProblemDetails\ProblemDetailsResponseFactory;
-use Zend\ProblemDetails\ProblemDetailsResponseFactoryFactory;
+use Zend\ServiceManager\ServiceManager;
 
 class ConfigProviderTest extends TestCase
 {
@@ -21,23 +20,9 @@ class ConfigProviderTest extends TestCase
         $provider = new ConfigProvider();
         $config = $provider();
 
-        $this->assertArrayHasKey('dependencies', $config);
+        $serviceManger = new ServiceManager($config['dependencies']);
 
-        $dependencies = $config['dependencies'];
-        $this->assertArrayHasKey('factories', $dependencies);
-
-        $factories = $dependencies['factories'];
-        $this->assertCount(2, $factories);
-        $this->assertArrayHasKey(ProblemDetailsMiddleware::class, $factories);
-        $this->assertArrayHasKey(ProblemDetailsResponseFactory::class, $factories);
-
-        $this->assertSame(
-            ProblemDetailsMiddlewareFactory::class,
-            $factories[ProblemDetailsMiddleware::class]
-        );
-        $this->assertSame(
-            ProblemDetailsResponseFactoryFactory::class,
-            $factories[ProblemDetailsResponseFactory::class]
-        );
+        $this->assertInstanceOf(ProblemDetailsResponseFactory::class, $serviceManger->get(ProblemDetailsResponseFactory::class));
+        $this->assertInstanceOf(ProblemDetailsMiddleware::class, $serviceManger->get(ProblemDetailsMiddleware::class));
     }
 }
