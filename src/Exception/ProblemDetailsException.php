@@ -8,11 +8,12 @@
 namespace Zend\ProblemDetails\Exception;
 
 use JsonSerializable;
+use Throwable;
 
 /**
  * Defines an exception type for generating Problem Details.
  */
-interface ProblemDetailsException extends JsonSerializable
+interface ProblemDetailsException extends JsonSerializable, Throwable
 {
     public function getStatus() : int;
 
